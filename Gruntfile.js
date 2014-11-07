@@ -25,6 +25,19 @@ module.exports = function (grunt) {
       dist: 'dist'
     },
 
+      less: {
+          development: {
+              options: {
+                  compress: true,
+                  yuicompress: true,
+                  optimization: 2
+              },
+              files: {
+                  "<%= yeoman.app %>/app.css": "<%= yeoman.app %>/app.less"
+              }
+          }
+      },
+
     // Watches files for changes and runs tasks based on the changed files
     watch: {
       bower: {
@@ -42,10 +55,13 @@ module.exports = function (grunt) {
         files: ['test/spec/{,*/}*.js'],
         tasks: ['newer:jshint:test', 'karma']
       },
-      styles: {
-        files: ['<%= yeoman.app %>/styles/{,*/}*.css'],
-        tasks: ['newer:copy:styles', 'autoprefixer']
-      },
+        styles: {
+            files: ['<%= yeoman.app %>/**/*.less'],
+            tasks: ['less', 'newer:copy:styles'],
+            options: {
+                livereload: true
+            }
+        },
       gruntfile: {
         files: ['Gruntfile.js']
       },
@@ -349,6 +365,7 @@ module.exports = function (grunt) {
 
     grunt.task.run([
       'clean:server',
+        'less',
       'bowerInstall',
       'concurrent:server',
       'autoprefixer',
@@ -373,6 +390,7 @@ module.exports = function (grunt) {
   grunt.registerTask('build', [
     'clean:dist',
     'bowerInstall',
+      'less',
     'useminPrepare',
     'concurrent:dist',
     'autoprefixer',
@@ -392,4 +410,6 @@ module.exports = function (grunt) {
     'test',
     'build'
   ]);
+
+  grunt.loadNpmTasks('grunt-contrib-less');
 };
