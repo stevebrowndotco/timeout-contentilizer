@@ -18,12 +18,12 @@ angular.module('timeoutContentilizerApp')
             });
 
             if(idExists) {
-                console.log('aha! there is match')
-                $scope.pages[_event.id].visits ++;
+                $scope.pages[_event.id].increaseVisitor();
                 $scope.pages[_event.id].timeLastVisited = new Date();
                 $scope.pages[_event.id].updateVelocity();
             } else {
-                $scope.pages[_event.id] = _event;
+                $scope.pages[_event.id] = new VisitModel(_event);
+                console.log($scope.pages[_event.id])
             }
 
         });
@@ -34,8 +34,15 @@ angular.module('timeoutContentilizerApp')
         WebSocket.onopen(function() {
             console.log('connection open');
             setInterval(function () {
-                WebSocket.send(JSON.stringify(new VisitModel()));
-            }, 2000);
+                WebSocket.send(JSON.stringify({
+                    id: Math.floor(Math.random() * 10) + 1,
+                    category: categories[Math.floor(Math.random() * categories.length)],
+                    visits: 1,
+                    timeLastVisited: new Date(),
+                    timeFirstVisited: new Date(),
+                    velocity: 0
+                }));
+            }, 100);
         });
     })
     .factory('MessagesService', function($q) {
@@ -139,17 +146,24 @@ function testWebSocket() {
 var categories = ['Film','Music','Things to Do','Art','Events'];
 
 
-var VisitModel = function() {
-    this.id = Math.floor(Math.random() * 50) + 1;
-    this.category = categories[Math.floor(Math.random() * categories.length)];
-    this.visits = 1;
-    this.timeLastVisited = new Date();
-    this.timeFirstVisited = new Date();
-    this.velocity = 0;
+var VisitModel = function(data) {
+
+    this.id = data.id;
+    this.category = data.category;
+    this.visits = data.visits;
+    this.timeLastVisited = new Date(data.timeLastVisited);
+    this.timeFirstVisited = new Date(data.timeFirstVisited);
+    this.velocity = data.velocity;
 
     VisitModel.prototype.updateVelocity = function() {
-        this.velocity = (this.timeLastVisited * 1000) / this.visits;
+
+        this.velocity = (this.visits / ((this.timeLastVisited - this.timeFirstVisited) /  1000)).toFixed(2);
     }
+
+    VisitModel.prototype.increaseVisitor = function() {
+        this.visits = this.visits + 1;
+    }
+
 };
 
 
