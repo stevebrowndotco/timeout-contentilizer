@@ -19,5 +19,5 @@ angular
             });
             WebSocketProvider
                 .prefix('')
-                .uri('ws://echo.websocket.org/');
+                .uri('ws://qa17.d:3000');
     });

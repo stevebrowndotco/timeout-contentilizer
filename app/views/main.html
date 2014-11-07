@@ -12,7 +12,7 @@
 
 <button ng-click="pause()">Pause!</button>
 
-{{paused}}
+Time Opened: {{timeStart}}
 
 <table class="table">
     <thead>
@@ -25,7 +25,7 @@
     </thead>
     <tbody>
     <tr ng-repeat="page in pages">
-        <td>{{page.id}}</td>
+        <td>{{page.uid}}</td>
         <td>{{page.visits}}</td>
         <td>{{page.velocity}}</td>
         <td>{{page.acceleration}}</td>
