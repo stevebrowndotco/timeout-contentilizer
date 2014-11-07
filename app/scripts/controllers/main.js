@@ -1,25 +1,42 @@
 'use strict';
 
 angular.module('timeoutContentilizerApp')
-    .controller('MainCtrl', function($scope, MessagesService, TestWebSocket, WebSocket) {
+    .controller('MainCtrl', function($scope, MessagesService, TestWebSocket, WebSocket, $window) {
 
 
         var count = 0;
+        $scope.pages = {};
+
         $scope.messages = MessagesService.get();
         $scope.status = TestWebSocket.status();
         WebSocket.onmessage(function(event) {
-            console.log('message: ', event);
+
+            var _event = JSON.parse(event.data);
+
+            var idExists = _.find($scope.pages, function (v) {
+                return _event.id === v.id;
+            });
+
+            if(idExists) {
+                console.log('aha! there is match')
+                $scope.pages[_event.id].visits ++;
+                $scope.pages[_event.id].timeLastVisited = new Date();
+                $scope.pages[_event.id].updateVelocity();
+            } else {
+                $scope.pages[_event.id] = _event;
+            }
+
         });
+
         WebSocket.onclose(function() {
             console.log('connection closed');
         });
         WebSocket.onopen(function() {
             console.log('connection open');
-            WebSocket.send('Hello World').send(' again').send(' and again');
+            setInterval(function () {
+                WebSocket.send(JSON.stringify(new VisitModel()));
+            }, 2000);
         });
-        setInterval(function () {
-            WebSocket.send(JSON.stringify(new SearchModel()));
-        }, 1000);
     })
     .factory('MessagesService', function($q) {
         var _messages = [{
@@ -119,13 +136,21 @@ function testWebSocket() {
     };
 }
 
-var categories = ['Film','Music','Things to Do','Art','Events']
+var categories = ['Film','Music','Things to Do','Art','Events'];
 
 
-
-var SearchModel = function() {
+var VisitModel = function() {
+    this.id = Math.floor(Math.random() * 50) + 1;
     this.category = categories[Math.floor(Math.random() * categories.length)];
-}
+    this.visits = 1;
+    this.timeLastVisited = new Date();
+    this.timeFirstVisited = new Date();
+    this.velocity = 0;
+
+    VisitModel.prototype.updateVelocity = function() {
+        this.velocity = (this.timeLastVisited * 1000) / this.visits;
+    }
+};
 
 
 
