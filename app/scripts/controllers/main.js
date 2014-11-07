@@ -3,9 +3,14 @@
 angular.module('timeoutContentilizerApp')
     .controller('MainCtrl', function($scope, MessagesService, TestWebSocket, WebSocket, $window) {
 
+        var MAX_IDS = 10;
 
-        var count = 0;
         $scope.pages = {};
+        $scope.paused = false;
+
+        $scope.pause = function() {
+            $scope.paused = !$scope.paused;
+        }
 
         $scope.messages = MessagesService.get();
         $scope.status = TestWebSocket.status();
@@ -32,18 +37,30 @@ angular.module('timeoutContentilizerApp')
         });
         WebSocket.onopen(function() {
             console.log('connection open');
-            setInterval(function () {
-                WebSocket.send(JSON.stringify({
-                    id: Math.floor(Math.random() * 50) + 1,
-                    category: categories[Math.floor(Math.random() * categories.length)],
-                    visits: 1,
-                    timeLastVisited: new Date(),
-                    timeFirstVisited: new Date(),
-                    velocity: 0,
-                    acceleration: 0
-                }));
-            }, 100);
+            pushSocket();
         });
+
+        var pushSocket = function () {
+
+            setTimeout(function () {
+
+                if (!$scope.paused) {
+
+                    WebSocket.send(JSON.stringify({
+                        id: Math.floor(Math.random() * MAX_IDS) + 1,
+                        category: categories[Math.floor(Math.random() * categories.length)],
+                        visits: 1,
+                        timeLastVisited: new Date(),
+                        timeFirstVisited: new Date(),
+                        velocity: 0,
+                        acceleration: 0,
+                        favourite: Math.floor(Math.random() * 100) + 1
+                    }));
+                    pushSocket();
+                }
+            }, 300);
+
+        }
     })
     .factory('MessagesService', function($q) {
         var _messages = [{
@@ -162,8 +179,7 @@ var VisitModel = function(data) {
         var t1 = new Date();
 
         var v0 = this.velocity;
-        var v1 = (this.visits / ((t1 - t0) /  1000)).toFixed(2);
-
+        var v1 = (this.visits / ((t1 - this.timeFirstVisited) /  1000)).toFixed(2);
 
         this.velocity = v1;
         this.acceleration = ((v1 - v0) / (t1 - t0)).toFixed(2);
