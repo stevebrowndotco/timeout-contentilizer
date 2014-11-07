@@ -4,10 +4,11 @@ angular.module('timeoutContentilizerApp')
     .controller('MainCtrl', function($scope, MessagesService, TestWebSocket, WebSocket) {
 
 
+        var count = 0;
         $scope.messages = MessagesService.get();
         $scope.status = TestWebSocket.status();
         WebSocket.onmessage(function(event) {
-            console.log('message: ', event.data);
+            console.log('message: ', event);
         });
         WebSocket.onclose(function() {
             console.log('connection closed');
@@ -16,9 +17,9 @@ angular.module('timeoutContentilizerApp')
             console.log('connection open');
             WebSocket.send('Hello World').send(' again').send(' and again');
         });
-        setTimeout(function() {
-            WebSocket.close();
-        }, 500)
+        setInterval(function () {
+            WebSocket.send(JSON.stringify(new SearchModel()));
+        }, 1000);
     })
     .factory('MessagesService', function($q) {
         var _messages = [{
@@ -116,6 +117,14 @@ function testWebSocket() {
     websocket.onerror = function(evt) {
         onError(evt)
     };
+}
+
+var categories = ['Film','Music','Things to Do','Art','Events']
+
+
+
+var SearchModel = function() {
+    this.category = categories[Math.floor(Math.random() * categories.length)];
 }
 
 
