@@ -26,11 +26,11 @@ angular.module('timeoutContentilizerApp')
             if(idExists) {
                 $scope.pages[_event.uid].increaseVisitor();
                 $scope.pages[_event.uid].updateVelocity();
+                $scope.pages[_event.uid].changeSize()
             } else {
                 $scope.pages[_event.uid] = new VisitModel(_event);
                 console.log($scope.pages[_event.id])
             }
-
         });
 
         WebSocket.onclose(function() {
@@ -50,6 +50,11 @@ angular.module('timeoutContentilizerApp')
             this.timeLastVisited = new Date();
             this.timeFirstVisited = new Date();
             this.acceleration = 0;
+            this.style = {
+                bottom: 0,
+                left: Math.floor(Math.random() * 100) + 1 + '%'
+            }
+
 
             VisitModel.prototype.updateVelocity = function() {
 
@@ -68,6 +73,11 @@ angular.module('timeoutContentilizerApp')
             VisitModel.prototype.increaseVisitor = function() {
                 this.visits = this.visits + 1;
             };
+
+            VisitModel.prototype.changeSize = function() {
+                this.style.transform = 'scale('+this.velocity + 1 +')';
+                this.style.bottom = this.visits * 10 + '%';
+            }
 
         };
 

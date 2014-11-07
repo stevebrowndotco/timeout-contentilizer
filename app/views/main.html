@@ -12,7 +12,9 @@
 
 <button ng-click="pause()">Pause!</button>
 
-Time Opened: {{timeStart}}
+<div class="viz">
+    <div ng-repeat="page in pages" ng-style="page.style" class="bubble"><span style="color: #fff">{{page.uid.replace('Content-Post-','')}}</span></div>
+</div>
 
 <table class="table">
     <thead>
