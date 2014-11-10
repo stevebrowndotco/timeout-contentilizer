@@ -1,9 +1,8 @@
 'use strict';
 
 angular.module('timeoutContentilizerApp')
-    .controller('MainCtrl', function($scope, MessagesService, TestWebSocket, WebSocket, $window) {
+    .controller('MainCtrl', function($scope, MessagesService, TestWebSocket, WebSocket) {
 
-        var MAX_IDS = 10;
         var timeStart = new Date();
 
         $scope.pages = {};
