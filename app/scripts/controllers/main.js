@@ -1,128 +1,119 @@
 'use strict';
 
-angular.module('timeoutContentilizerApp')
-    .controller('MainCtrl', function($scope, MessagesService, TestWebSocket, WebSocket) {
+angular
+    .module('realtime.main', [
+        'graffiti'
+    ])
+    .controller('MainCtrl', function ($scope, MessagesService, TestWebSocket, WebSocket, graffiti) {
 
-        var timeStart = new Date();
-
-        $scope.pages = {};
+        $scope.hits = {};
         $scope.paused = false;
 
-        $scope.pause = function() {
+        $scope.pause = function () {
             $scope.paused = !$scope.paused;
         }
 
         $scope.messages = MessagesService.get();
         $scope.status = TestWebSocket.status();
-        WebSocket.onmessage(function(event) {
+        WebSocket.onmessage(function (event) {
 
-            var _event = JSON.parse(event.data);
+            var _event = JSON.parse(event.data),
+                type = _event.uid.split('-')[1].toLowerCase() + 's',
+                id = _event.uid.split('-')[2].toLowerCase();
 
-            var idExists = _.find($scope.pages, function (v) {
-                return _event.uid === v.uid;
-            });
+            graffiti.client('/v1/sites/'+_event.site+'/'+type+'/'+id, 'GET').then(function(data){
 
-            if(idExists) {
-                $scope.pages[_event.uid].increaseVisitor();
-                $scope.pages[_event.uid].updateVelocity();
-                $scope.pages[_event.uid].changeSize()
-            } else {
-                $scope.pages[_event.uid] = new VisitModel(_event);
-                console.log($scope.pages[_event.id])
-            }
+                var idExists = _.find($scope.hits, function (v) {
+                    return _event.uid === v.uid;
+                });
+
+                if (idExists) {
+                    $scope.hits[_event.uid].increaseVisitor();
+                    $scope.hits[_event.uid].changeSize()
+                } else {
+                    $scope.hits[_event.uid] = new VisitModel(data.body);
+                }
+            })
+
         });
 
-        WebSocket.onclose(function() {
+        WebSocket.onclose(function () {
             console.log('connection closed');
         });
-        WebSocket.onopen(function() {
+        WebSocket.onopen(function () {
             console.log('connection open');
         });
 
-        var VisitModel = function(data) {
+        var VisitModel = function (data) {
 
+            var image = data.image && data.image.url_pattern ? data.image.url_pattern.value.replace('{width}','150').replace('{height}','113') : null;
+
+            this.image = image;
+            this.name = data.name;
             this.uid = data.uid;
+            this.link = data.to_website;
             this.category = data.category;
             this.visits = 1;
             this.rate = data.rate;
             this.image_url = data.image_url;
-            this.timeLastVisited = new Date();
-            this.timeFirstVisited = new Date();
-            this.acceleration = 0;
             this.style = {
                 bottom: 0,
                 left: Math.floor(Math.random() * 100) + 1 + '%'
             }
 
-
-            VisitModel.prototype.updateVelocity = function() {
-
-                var t0 = this.timeLastVisited - timeStart;
-                var t1 = new Date() - timeStart;
-
-                var v0 = this.velocity;
-                var v1 = (this.visits / ((t1 - t0) /  1000)).toFixed(2);
-
-                this.velocity = v1;
-                this.acceleration = ((v1 - v0) / (t1 - t0)).toFixed(2);
-                this.timeLastVisited = new Date();
-
-            };
-
-            VisitModel.prototype.increaseVisitor = function() {
+            VisitModel.prototype.increaseVisitor = function () {
                 this.visits = this.visits + 1;
             };
-
-            VisitModel.prototype.changeSize = function() {
-                this.style.transform = 'scale('+this.velocity + 1 +')';
-                this.style.bottom = this.visits * 10 + '%';
-            }
 
         };
 
     })
-    .factory('MessagesService', function($q) {
-        var _messages = [{
-            text: 'test message',
-            created_at: new Date()
-        }];
+    .factory('MessagesService', function ($q) {
+        var _messages = [
+            {
+                text: 'test message',
+                created_at: new Date()
+            }
+        ];
         return {
-            sync: function() {
+            sync: function () {
                 var dfd = $q.defer();
                 dfd.resolve(_messages)
                 return dfd.promise;
             },
-            get: function() {
+            get: function () {
                 return _messages;
             },
-            create: function(message) {
+            create: function (message) {
                 message
             }
         } // end return
     })
-    .factory('TestWebSocket', function() {
+    .factory('TestWebSocket', function () {
         var _status = ['DISCONNECTED', 'CONNECTED'];
         var _currentStatus = 0;
         var ws;
         return {
-            status: function(url) {
+            status: function (url) {
                 return _status[_currentStatus];
             },
-            new: function(wsUri) {
+            new: function (wsUri) {
                 ws = new WebSocket(wsUri);
                 return ws;
             },
-            on: function(event, callback) {
+            on: function (event, callback) {
                 ws['on' + event.toLowerCase()] = callback;
             },
-            onopen: function(callback) {
+            onopen: function (callback) {
                 ws.onopen = callback;
             },
-            onmessage: function(event) {
+            onmessage: function (event) {
                 ws.onmessage
             },
-            onclose: function() {},
-            send: function() {}
+            onclose: function () {
+            },
+            send: function () {
+            }
         }
     })
 var wsUri = "ws://qa17.d:3000";
@@ -165,21 +156,21 @@ function writeToScreen(message) {
 
 function testWebSocket() {
     websocket = new WebSocket(wsUri);
-    websocket.onopen = function(evt) {
+    websocket.onopen = function (evt) {
         onOpen(evt)
     };
-    websocket.onclose = function(evt) {
+    websocket.onclose = function (evt) {
         onClose(evt)
     };
-    websocket.onmessage = function(evt) {
+    websocket.onmessage = function (evt) {
         onMessage(evt)
     };
-    websocket.onerror = function(evt) {
+    websocket.onerror = function (evt) {
         onError(evt)
     };
 }
 
-var categories = ['Film','Music','Things to Do','Art','Events'];
+var categories = ['Film', 'Music', 'Things to Do', 'Art', 'Events'];
 
 
 

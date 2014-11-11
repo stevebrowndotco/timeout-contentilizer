@@ -1,24 +1,25 @@
 <button ng-click="pause()">Pause!</button>
 
-<div class="viz">
-    <div ng-repeat="page in pages" ng-style="page.style" class="bubble"><span style="color: #fff">{{page.uid.replace('Content-Post-','')}}</span></div>
-</div>
+<!--<div class="viz">-->
+    <!--<div ng-repeat="page in pages" ng-style="page.style" class="bubble"><span style="color: #fff">{{page.uid.replace('Content-Post-','')}}</span></div>-->
+<!--</div>-->
 
 <table class="table">
     <thead>
     <tr>
-        <th>Id</th>
+        <th>Image</th>
         <th>Visits</th>
-        <th>Velocity (visits over time)</th>
         <th>Acceleration</th>
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="page in pages">
-        <td>{{page.uid}}</td>
-        <td>{{page.visits}}</td>
-        <td>{{page.velocity}}</td>
-        <td>{{page.acceleration}}</td>
+    <tr ng-if="hit.image" ng-repeat="hit in hits | limitTo: 2 ">
+        <td>
+            <img ng-src="{{hit.image}}"/>
+            <h4>{{hit.name}}</h4>
+        </td>
+        <td>{{hit.visits}}</td>
+        <td>{{hit.acceleration}}</td>
     </tr>
     </tbody>
 </table>

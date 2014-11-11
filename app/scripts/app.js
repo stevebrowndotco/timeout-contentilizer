@@ -1,12 +1,13 @@
 'use strict';
 
 angular
-    .module('timeoutContentilizerApp', [
+    .module('realtime', [
         'ngCookies',
         'ngResource',
         'ngSanitize',
         'ngRoute',
-        'angular-websocket'
+        'angular-websocket',
+        'realtime.main'
     ])
     .config(function ($routeProvider, WebSocketProvider) {
         $routeProvider
@@ -19,5 +20,6 @@ angular
             });
             WebSocketProvider
                 .prefix('')
-                .uri('ws://qa17.d:3000');
+//                .uri('ws://qa17.d:3000');
+                        .uri('ws://qa17.d:3000');
     });
