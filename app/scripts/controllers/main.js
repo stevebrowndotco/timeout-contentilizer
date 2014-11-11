@@ -2,16 +2,12 @@
 
 angular
     .module('realtime.main', [
-        'graffiti'
+        'graffiti',
+        'highcharts-ng'
     ])
     .controller('MainCtrl', function ($scope, graffiti, WebSocket) {
 
         $scope.hits = {};
-        $scope.paused = false;
-
-        $scope.pause = function () {
-            $scope.paused = !$scope.paused;
-        }
 
         WebSocket.onmessage(function (event) {
 
@@ -19,9 +15,7 @@ angular
                 type = _event.uid.split('-')[1].toLowerCase() + 's',
                 id = _event.uid.split('-')[2].toLowerCase();
 
-            console.log(_event)
-
-            graffiti.client('/v1/sites/'+_event.site+'/'+type+'/'+id, 'GET').then(function(data){
+            graffiti.client('/v1/sites/' + _event.site + '/' + type + '/' + id, 'GET').then(function (data) {
 
                 var idExists = _.find($scope.hits, function (v) {
                     return _event.uid === v.uid;
@@ -29,38 +23,34 @@ angular
 
                 if (idExists) {
                     $scope.hits[_event.uid].increaseVisitor();
-                    $scope.hits[_event.uid].changeSize()
+                    $scope.hits[_event.uid].scale()
                 } else {
-                    $scope.hits[_event.uid] = new VisitModel(data.body);
+
+                    var hit = new VisitModel(data.body);
+//                    console.log(_event)
+                    $scope.hits[_event.uid] = hit;
                 }
             })
 
-        });
 
-        WebSocket.onclose(function () {
-            console.log('connection closed');
-        });
-        WebSocket.onopen(function () {
-            $scope.status = 'CONNECTED';
-            console.log('connection open');
         });
 
         var VisitModel = function (data) {
 
-            var image = data.image && data.image.url_pattern ? data.image.url_pattern.value.replace('{width}','150').replace('{height}','113') : null;
-
-            this.image = image;
-            this.name = data.name;
-            this.uid = data.uid;
-            this.link = data.to_website;
-            this.category = data.category;
+            this.image = data.image && data.image.url_pattern ? data.image.url_pattern.value.replace('{width}', '150').replace('{height}', '113') : null;
+            this.name = data.name ? data.name : null;
+            this.uid = data.uid ? data.uid : null;
+            this.link = data.to_website ? data.to_website : null;
+            this.category = data.categorisation ? data.categorisation.primary.name : null;
             this.visits = 1;
-            this.rate = data.rate;
-            this.image_url = data.image_url;
+            this.rate = data.rate ? data.rate : null;
+            this.date = new Date();
+            this.city = data.city;
             this.style = {
-                bottom: 0,
+                top: Math.floor(Math.random() * 100) + 1 + '%',
                 left: Math.floor(Math.random() * 100) + 1 + '%'
             }
+
 
             VisitModel.prototype.increaseVisitor = function () {
                 this.visits = this.visits + 1;
@@ -70,8 +60,8 @@ angular
 
     })
 
-
 var categories = ['Film', 'Music', 'Things to Do', 'Art', 'Events'];
+var sites = ['london', 'newyork', 'barcelona', 'losangeles', 'chicago', 'berlin'];
 
 
 

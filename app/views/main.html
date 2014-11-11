@@ -1,36 +1,27 @@
-<button ng-click="pause()">Pause!</button>
+<div class="viz">
+    <div ng-repeat="hit in hits" ng-class="hit.category.toLowerCase().replace(' ','-').replace(' ','-')"
+         ng-style="hit.style" class="bubble"></div>
+</div>
 
-<!--<div class="viz">-->
-    <!--<div ng-repeat="page in pages" ng-style="page.style" class="bubble"><span style="color: #fff">{{page.uid.replace('Content-Post-','')}}</span></div>-->
-<!--</div>-->
-
-<table class="table">
-    <thead>
-    <tr>
-        <th>Image</th>
-        <th>Visits</th>
-        <th>Acceleration</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr ng-if="hit.image" ng-repeat="hit in hits | limitTo: 2 ">
-        <td>
-            <img ng-src="{{hit.image}}"/>
-            <h4>{{hit.name}}</h4>
-        </td>
-        <td>{{hit.visits}}</td>
-        <td>{{hit.acceleration}}</td>
-    </tr>
-    </tbody>
-</table>
-
-<div>
-    <h2>WebSocket Test</h2>
-    Connection: {{ status }}
-    <div id="output" ng-repeat="message in messages">
-        Message: {{ message.text }}
-        <small>{{ message.created_at | date }}</small>
-    </div>
-
-
+<div class="stream">
+    <h1>Hits Vizualizer</h1>
+    <p>Connection: {{ status }}</p>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Image</th>
+            <th>Page Name</th>
+            <th>Visits</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="hit in hits">
+            <td>
+                <div class="image" ng-style="{'background-image':'url(' + hit.image + ')'}"></div>
+            </td>
+            <td>{{hit.name}}</td>
+            <td>{{hit.visits}}</td>
+        </tr>
+        </tbody>
+    </table>
 </div>
