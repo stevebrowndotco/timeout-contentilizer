@@ -258,7 +258,7 @@ angular.module('timeoutContentilizerApp')
                 $scope.venues[venue.index].visitCount=$scope.venues[venue.index].visitCount+1
 
                 $scope.log[catIndex].style={
-                        'background-image': 'url(images/' + $scope.venues[venue.index].href +')',
+                        'background-image': 'url(fakeImages/' + $scope.venues[venue.index].href +')',
                         'background-size' : 'cover',
 
                     };
