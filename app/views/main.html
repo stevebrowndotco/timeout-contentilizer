@@ -1,11 +1,12 @@
 <div class="viz">
+    <h1>Hits Vizualiser</h1>
     <div ng-repeat="hit in hits" ng-class="hit.category.toLowerCase().replace(' ','-').replace(' ','-')"
          ng-style="hit.style" class="bubble"></div>
 </div>
 
 <div class="stream">
-    <h1>Hits Vizualizer</h1>
-    <p>Connection: {{ status }}</p>
+    <p><span class="connected" ng-show="status"></span> {{status}}</p>
+    <h2>What's Trending</h2>
     <table class="table">
         <thead>
         <tr>

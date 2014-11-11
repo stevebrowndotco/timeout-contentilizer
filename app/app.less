@@ -1,4 +1,12 @@
 .viz {
+
+  h1 {
+    position: absolute;
+    top: -5px;
+    left: 5px;
+    margin: 0;
+    padding: 0;
+  }
   background: #fff;
   position: absolute;
   top: 0;
@@ -15,11 +23,16 @@
   top: 0;
   bottom: 0;
   padding: 0 20px 0 0;
+  height: 100%;
+  overflow-y: auto;
+
 
   .image {
     width: 50px;
     height: 50px;
     background-size: cover;
+    background: #eee;
+    border: 1px solid #e2e2e2;
   }
 }
 .bubble {
@@ -31,6 +44,11 @@
   position: absolute;
   opacity: 0.8;
   transition: all ease-in-out 0.3s;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 1;
+  }
 
   &.film {
     background: #92C160;
@@ -59,4 +77,12 @@
   &.size {
 
   }
+}
+
+.connected {
+  width: 10px;
+  height: 10px;
+  background: green;
+  border-radius: 100%;
+  display: inline-block;
 }

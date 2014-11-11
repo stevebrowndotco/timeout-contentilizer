@@ -27,13 +27,19 @@ angular
                 } else {
 
                     var hit = new VisitModel(data.body);
-//                    console.log(_event)
+                    console.log(hit)
                     $scope.hits[_event.uid] = hit;
                 }
             })
 
 
         });
+
+        WebSocket.onopen(function () {
+            console.log('connection open');
+            $scope.status = 'CONNECTED';
+        });
+
 
         var VisitModel = function (data) {
 
@@ -55,6 +61,10 @@ angular
             VisitModel.prototype.increaseVisitor = function () {
                 this.visits = this.visits + 1;
             };
+
+            VisitModel.prototype.scale = function() {
+                this.style.transform = 'scale('+this.visits+')';
+            }
 
         };
 
