@@ -11,8 +11,8 @@ angular
 
         $scope.now = {};
 
-        $scope.myValueFunction = function(card) {
-            return card.values.opt1;
+        $scope.myValueFunction = function(hit) {
+            return hit.visits;
         }
 
         $scope.sorter = '-visits';

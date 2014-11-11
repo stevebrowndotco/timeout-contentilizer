@@ -1,7 +1,7 @@
 <div class="viz">
-    <h1>Time Out Hits Vizualiser</h1>
-    <a ng-href="{{hit.link}}" target="_blank" ng-repeat="hit in hits" ng-class="hit.category.toLowerCase().replace(' ','-').replace(' ','-')"
-         ng-style="hit.style" class="bubble"></a>
+    <h1 tooltip="test">Time Out Hits Vizualiser</h1>
+    <a ng-show="hit.image" ng-href="{{hit.link}}" target="_blank" ng-repeat="hit in hits" ng-class="hit.category.toLowerCase().replace(' ','-').replace(' ','-')"
+         ng-style="hit.style" class="bubble animate-bubble"><p>{{hit.name}}</p></a>
 </div>
 
 <div class="stream">

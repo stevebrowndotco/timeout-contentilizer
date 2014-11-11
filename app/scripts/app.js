@@ -7,7 +7,8 @@ angular
         'ngSanitize',
         'ngRoute',
         'angular-websocket',
-        'realtime.main'
+        'realtime.main',
+        'ui.bootstrap'
     ])
     .config(function ($routeProvider, WebSocketProvider) {
         $routeProvider
