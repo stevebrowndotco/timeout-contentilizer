@@ -11,9 +11,11 @@ angular
 
         $scope.now = {};
 
-        $scope.visitSort = function(hit) {
-            return hit.visits;
+        $scope.myValueFunction = function(card) {
+            return card.values.opt1;
         }
+
+        $scope.sorter = '-visits';
 
         WebSocket.onmessage(function (event) {
 
