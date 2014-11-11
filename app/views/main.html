@@ -1,12 +1,11 @@
 <div class="viz">
     <h1>Hits Vizualiser</h1>
-    <div ng-repeat="hit in hits" ng-class="hit.category.toLowerCase().replace(' ','-').replace(' ','-')"
-         ng-style="hit.style" class="bubble"></div>
+    <a ng-href="{{hit.link}}" target="_blank" ng-repeat="hit in hits" ng-class="hit.category.toLowerCase().replace(' ','-').replace(' ','-')"
+         ng-style="hit.style" class="bubble"></a>
 </div>
 
 <div class="stream">
-    <p><span class="connected" ng-show="status"></span> {{status}}</p>
-    <h2>What's Trending</h2>
+    <h2>What's Trending <p><span class="connected" ng-show="status"></span> {{status}}</p></h2>
     <table class="table">
         <thead>
         <tr>
@@ -16,7 +15,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="hit in hits">
+        <tr ng-if="hit.image" ng-repeat="hit in hits | orderBy:visitSort">
             <td>
                 <div class="image" ng-style="{'background-image':'url(' + hit.image + ')'}"></div>
             </td>
@@ -25,4 +24,9 @@
         </tr>
         </tbody>
     </table>
+</div>
+
+<div class="now">
+    <h4>{{now.name}}</h4>
+    <div ng-style="{'background-image':'url(' + now.image + ')'}" class="image"></div>
 </div>

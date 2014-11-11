@@ -9,6 +9,12 @@ angular
 
         $scope.hits = {};
 
+        $scope.now = {};
+
+        $scope.visitSort = function(hit) {
+            return hit.visits;
+        }
+
         WebSocket.onmessage(function (event) {
 
             var _event = JSON.parse(event.data),
@@ -27,8 +33,13 @@ angular
                 } else {
 
                     var hit = new VisitModel(data.body);
-                    console.log(hit)
+
                     $scope.hits[_event.uid] = hit;
+
+                    if(data.body.image_url) {
+                        $scope.now = hit;
+                    }
+
                 }
             })
 
@@ -36,10 +47,9 @@ angular
         });
 
         WebSocket.onopen(function () {
-            console.log('connection open');
+//            console.log('connection open');
             $scope.status = 'CONNECTED';
         });
-
 
         var VisitModel = function (data) {
 
@@ -67,6 +77,7 @@ angular
             }
 
         };
+
 
     })
 
