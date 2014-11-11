@@ -1,45 +1,29 @@
+
 <div class="header">
     <ul class="nav nav-pills pull-right">
-        <li class="active"><a ng-href="#">Home</a>
-        </li>
-        <li><a ng-href="#">About</a>
-        </li>
-        <li><a ng-href="#">Contact</a>
+        <li><a ng-href="#">Settings</a>
         </li>
     </ul>
-    <h3 class="text-muted">timeout contentilizer</h3>
+    <h3 class="text-muted">Time Out - Freshly Clicked</h3>
 </div>
 
-<button ng-click="pause()">Pause!</button>
+<div class="container">
+    <div class="grid-container">
+        <div class="col-xs-2 cat" ng-repeat= "l in log" ng-animate=" 'animate' ">
+         
+            <h5 class="pull-left title">{{l.title}}</h5>
+           
 
-Time Opened: {{timeStart}}
+            <div ng-class="{'turn-on': l.new}"class="img-cointainer" ng-style="l.style"> 
+                <!-- <span class="badge pull-right">{{l.venue.visitCount}}</span> -->
+            </div>
 
-<table class="table">
-    <thead>
-    <tr>
-        <th>Id</th>
-        <th>Visits</th>
-        <th>Velocity (visits over time)</th>
-        <th>Acceleration</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr ng-repeat="page in pages">
-        <td>{{page.uid}}</td>
-        <td>{{page.visits}}</td>
-        <td>{{page.velocity}}</td>
-        <td>{{page.acceleration}}</td>
-    </tr>
-    </tbody>
-</table>
-
-<div>
-    <h2>WebSocket Test</h2>
-    Connection: {{ status }}
-    <div id="output" ng-repeat="message in messages">
-        Message: {{ message.text }}
-        <small>{{ message.created_at | date }}</small>
-    </div>
+           
 
 
+
+        </div> 
+    </div> 
 </div>
+
+

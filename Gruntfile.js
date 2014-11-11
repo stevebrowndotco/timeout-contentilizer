@@ -56,7 +56,7 @@ module.exports = function (grunt) {
                 tasks: ['newer:jshint:test', 'karma']
             },
             styles: {
-                files: ['<%= yeoman.app %>/**/*.less'],
+                files: ['<%= yeoman.app %>/*.less'],
                 tasks: ['less', 'newer:copy:styles'],
                 options: {
                     livereload: true

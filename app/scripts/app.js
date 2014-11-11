@@ -6,7 +6,8 @@ angular
         'ngResource',
         'ngSanitize',
         'ngRoute',
-        'angular-websocket'
+        'angular-websocket',
+        'ngAnimate'
     ])
     .config(function ($routeProvider, WebSocketProvider) {
         $routeProvider
@@ -19,5 +20,5 @@ angular
             });
             WebSocketProvider
                 .prefix('')
-                .uri('ws://qa17.d:3000');
+                .uri('ws://echo.websocket.org/');
     });
