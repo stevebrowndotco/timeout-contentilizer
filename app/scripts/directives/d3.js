@@ -2,7 +2,8 @@
     .module('realtime.main', [
         'graffiti',
         'highcharts-ng'
-    ]).directive('d3', [
+    ])
+    .directive('d3', [
         function() {
             return {
                 restrict: 'E',

@@ -1,9 +1,23 @@
+<style>
+    .chart div {
+  font: 10px sans-serif;
+  background-color: steelblue;
+  text-align: right;
+  padding: 3px;
+  margin: 1px;
+  color: black;
+
+}
+
+</style>
 <div class="viz">
     <h1 tooltip="test">Time Out Hits Vizualiser</h1>
-    <a ng-show="hit.image" ng-href="{{hit.link}}" target="_blank" ng-repeat="hit in hits" ng-class="hit.category.toLowerCase().replace(' ','-').replace(' ','-')"
-         ng-style="hit.style" class="bubble animate-bubble"><p>{{hit.name}}</p></a>
+  <!--   <a ng-show="hit.image" ng-href="{{hit.link}}" target="_blank" ng-repeat="hit in hits" ng-class="hit.category.toLowerCase().replace(' ','-').replace(' ','-')"
+         ng-style="hit.style" class="bubble animate-bubble"><p>{{hit.name}}</p></a> -->
 </div>
-
+<div>
+  <d3 data='myData'></d3>  
+</div>
 <div class="stream">
     <h2>What's Trending <p><span class="connected" ng-show="status"></span> {{status}}</p></h2>
     <table class="table">
