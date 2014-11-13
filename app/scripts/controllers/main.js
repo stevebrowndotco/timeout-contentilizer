@@ -13,82 +13,60 @@ angular
                     data: '='
                 },
                 link: function(scope, element) {
-                    var margin = {
-                            top: 20,
-                            right: 20,
-                            bottom: 30,
-                            left: 40
-                        },
-                        width = 480 - margin.left - margin.right,
-                        height = 360 - margin.top - margin.bottom;
+                    var width = "100%",
+                        height = "100%";
+
+
                     var svg = d3.select(element[0])
-                        .append("svg")
-                        .attr('width', width + margin.left + margin.right)
-                        .attr('height', height + margin.top + margin.bottom)
-                        .append("g")
-                        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-                    var x = d3.scale.ordinal().rangeRoundBands([0, width], .1);
-                    var y = d3.scale.linear().range([height, 0]);
+                        .append("svg")            
+                        .attr({width: width, height: height})
+                        .style('background-color', '#1c2733');
+                        
 
-                    var xAxis = d3.svg.axis()
-                        .scale(x)
-                        .orient("bottom");
 
-                    var yAxis = d3.svg.axis()
-                        .scale(y)
-                        .orient("left")
-                        .ticks(10);
+                    
 
                     //Render graph based on 'data'
                     scope.render = function(data) {
                         //Set our scale's domains
-                        x.domain(data.map(function(d) {
-                            return d.name;
-                        }));
-                        y.domain([0, d3.max(data, function(d) {
-                            return d.count;
-                        })]);
-
+                        console.log("data:",data);
+                    var size = 10;
+                    var x = 30;
+                    var y = 50;
                         //Redraw the axes
-                        svg.selectAll('g.axis').remove();
-                        //X axis
-                        svg.append("g")
-                            .attr("class", "x axis")
-                            .attr("transform", "translate(0," + height + ")")
-                            .call(xAxis);
+                      
+                    var circle_group = svg.append('g')
+                        .attr('transform', 'translate(' + x + ', ' + y + ')')
+                        .attr('fill', "red");
 
-                        //Y axis
-                        svg.append("g")
-                            .attr("class", "y axis")
-                            .call(yAxis)
-                            .append("text")
-                            .attr("transform", "rotate(-90)")
-                            .attr("y", 6)
-                            .attr("dy", ".71em")
-                            .style("text-anchor", "end")
-                            .text("Count");
+                    var ring = circle_group.append('circle')
+                        .attr({
+                            r: size + 20,
+                            stroke: 'none'
+                        })
+                        .transition()
+                        .attr('r', size + 40)
+                        .style('opacity', 0)
+                        .ease(Math.sqrt)
+                        .duration(2500)
+                        .remove();
 
-                        var bars = svg.selectAll(".bar").data(data);
-                        bars.enter()
-                            .append("rect")
-                            .attr("class", "bar")
-                            .attr("x", function(d) {
-                                return x(d.name);
-                            })
-                            .attr("width", x.rangeBand());
+                  /*  var circle_container = circle_group.append('a')
+                        .attr('xlink:href', data.url)
+                        .attr('target', '_blank')
+                        .attr('fill', svg_text_color);*/
 
-                        //Animate bars
-                        bars
-                            .transition()
-                            .style("fill", "red")
-                            .duration(1000)
-                            .attr('height', function(d) {
-                                return height - y(d.count);
-                            })
-                            .attr("y", function(d) {
-                                return y(d.count);
-                            })
+                  /*  var circle = circle_container.append('circle')
+                        .classed(type, true)
+                        .attr('r', size)
+                        .transition()
+                        .duration(max_life)
+                        .style('opacity', 0)
+                        .each('end', function() {
+                            circle_group.remove();
+                        })
+                        .remove();*/
                     };
 
                     //Watch 'data' and run scope.render(newVal) whenever it changes
@@ -104,13 +82,7 @@ angular
         $scope.hits = [];
 
         $scope.now = {};
-        $scope.myData = [
-            {name: 'AngularJS', count: 300},
-            {name: 'D3.JS', count: 150},
-            {name: 'jQuery', count: 400},
-            {name: 'Backbone.js', count: 300},
-            {name: 'Ember.js', count: 100}
-        ];
+       
         WebSocket.onmessage(function (event) {
             console.log("event:",event);
             var _event = JSON.parse(event.data),
