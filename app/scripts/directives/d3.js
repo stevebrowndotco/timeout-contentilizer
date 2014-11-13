@@ -1,4 +1,8 @@
-    .directive('d3', [
+  angular
+    .module('realtime.main', [
+        'graffiti',
+        'highcharts-ng'
+    ]).directive('d3', [
         function() {
             return {
                 restrict: 'E',

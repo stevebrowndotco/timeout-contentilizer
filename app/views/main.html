@@ -15,7 +15,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr ng-if="hit.image" ng-repeat="hit in hits | orderBy:myValueFunction">
+        <tr ng-if="hit.image" ng-repeat="hit in hits | orderBy:'-visits'">
             <td>
                 <div class="image" ng-style="{'background-image':'url(' + hit.image + ')'}"></div>
             </td>

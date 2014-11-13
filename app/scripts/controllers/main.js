@@ -6,16 +6,10 @@ angular
         'highcharts-ng'
     ])
     .controller('MainCtrl', function ($scope, graffiti, WebSocket) {
-
-        $scope.hits = {};
+        $scope.hitIds=[];
+        $scope.hits = [];
 
         $scope.now = {};
-
-        $scope.myValueFunction = function(hit) {
-            return hit.visits;
-        }
-
-        $scope.sorter = '-visits';
 
         WebSocket.onmessage(function (event) {
 
@@ -24,19 +18,16 @@ angular
                 id = _event.uid.split('-')[2].toLowerCase();
 
             graffiti.client('/v1/sites/' + _event.site + '/' + type + '/' + id, 'GET').then(function (data) {
+                var index = $scope.hitIds.indexOf(id)
 
-                var idExists = _.find($scope.hits, function (v) {
-                    return _event.uid === v.uid;
-                });
-
-                if (idExists) {
-                    $scope.hits[_event.uid].increaseVisitor();
-                    $scope.hits[_event.uid].scale()
+                if (index>-1) {
+                    $scope.hits[index].increaseVisitor();
+                    $scope.hits[index].scale()
                 } else {
 
                     var hit = new VisitModel(data.body);
-
-                    $scope.hits[_event.uid] = hit;
+                    $scope.hitIds.push(id)
+                    $scope.hits.push(hit);
 
                     if(data.body.image_url) {
                         $scope.now = hit;
@@ -44,12 +35,11 @@ angular
 
                 }
             })
-
-
+            
         });
 
         WebSocket.onopen(function () {
-//            console.log('connection open');
+        //  console.log('connection open');
             $scope.status = 'CONNECTED';
         });
 
