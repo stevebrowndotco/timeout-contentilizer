@@ -24,31 +24,53 @@ angular
                         .style('background-color', '#1c2733');
                         
 
-
+                        var startTime=new Date();
                     
 
                     //Render graph based on 'data'
                     scope.render = function(data) {
                         //Set our scale's domains
-                        console.log("data:",data);
+                      
                     var size = 10;
                     var x = 30;
                     var y = 50;
                         //Redraw the axes
-                      
-                    var circle_group = svg.append('g')
-                        .attr('transform', 'translate(' + x + ', ' + y + ')')
-                        .attr('fill', "red");
+/*                    var bars = svg.selectAll(".bar").data(data);
+                      bars.enter()
+                        .append("rect")
+                        .attr("class", "bar")
+                        .attr("x", function(d) { return x(d.name); })
+                        .attr("width", x.rangeBand());*/
+                    var circle_group = svg.selectAll(".circles").data(data);
 
-                    var ring = circle_group.append('circle')
-                        .attr({
-                            r: size + 20,
-                            stroke: 'none'
+
+                        circle_group.enter() 
+                        .append("g")
+
+                        .attr('transform', function(d) {
+                                console.log("d:",d);
+                                var scale =10;
+                              var x=d.style.left.replace('%',"")*scale;
+                              var y=d.style.top.replace('%',"")*scale;
+                           return 'translate(' + x + ', ' + y+ ')'})
+                        .append("circle")
+                        .attr('fill', "red")
+
+                    
+                        .attr('r',function(d) {
+                            return d.visits * 5
                         })
-                        .transition()
-                        .attr('r', size + 40)
+                        .transition().delay(function(d, i) { 
+                            console.log("d.date-startTime:",d.date-startTime);
+                            return d.date-startTime; 
+                        })  
+                        .attr('r',function(d) {
+                            return d.visits * 20
+                        })
                         .style('opacity', 0)
                         .ease(Math.sqrt)
+                      
+                        
                         .duration(2500)
                         .remove();
 
