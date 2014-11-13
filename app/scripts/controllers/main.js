@@ -12,7 +12,7 @@ angular
         $scope.now = {};
 
         WebSocket.onmessage(function (event) {
-
+            console.log("event:",event);
             var _event = JSON.parse(event.data),
                 type = _event.uid.split('-')[1].toLowerCase() + 's',
                 id = _event.uid.split('-')[2].toLowerCase();
@@ -35,7 +35,7 @@ angular
 
                 }
             })
-            
+
         });
 
         WebSocket.onopen(function () {
