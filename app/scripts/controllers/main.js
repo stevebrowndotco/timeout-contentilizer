@@ -18,22 +18,24 @@ angular
                 id = _event.uid.split('-')[2].toLowerCase();
 
             graffiti.client('/v1/sites/' + _event.site + '/' + type + '/' + id, 'GET').then(function (data) {
-                var index = $scope.hitIds.indexOf(id)
+                if(data.body.image_url) {
+                    var index = $scope.hitIds.indexOf(id)
 
-                if (index>-1) {
-                    $scope.hits[index].increaseVisitor();
-                    $scope.hits[index].scale()
-                } else {
+                    if (index>-1) {
+                        $scope.hits[index].increaseVisitor();
+                        $scope.hits[index].scale()
+                    } else {
 
-                    var hit = new VisitModel(data.body);
-                    $scope.hitIds.push(id)
-                    $scope.hits.push(hit);
+                        var hit = new VisitModel(data.body);
+                        $scope.hitIds.push(id)
+                        $scope.hits.push(hit);
 
-                    if(data.body.image_url) {
+                       
                         $scope.now = hit;
-                    }
+                      
 
-                }
+                    }
+                }    
             })
 
         });
