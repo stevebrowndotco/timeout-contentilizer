@@ -29,18 +29,7 @@ angular
 
                     //Render graph based on 'data'
                     scope.render = function(data) {
-                        //Set our scale's domains
-                      
-                    var size = 10;
-                    var x = 30;
-                    var y = 50;
-                        //Redraw the axes
-/*                    var bars = svg.selectAll(".bar").data(data);
-                      bars.enter()
-                        .append("rect")
-                        .attr("class", "bar")
-                        .attr("x", function(d) { return x(d.name); })
-                        .attr("width", x.rangeBand());*/
+
                     var circle_group = svg.selectAll(".circles").data(data);
 
 
@@ -48,11 +37,12 @@ angular
                         .append("g")
 
                         .attr('transform', function(d) {
-                                console.log("d:",d);
-                                var scale =10;
-                              var x=d.style.left.replace('%',"")*scale;
-                              var y=d.style.top.replace('%',"")*scale;
-                           return 'translate(' + x + ', ' + y+ ')'})
+                            console.log("d:", d);
+                            var scale = 10;
+                            var x = d.style.left * scale;
+                            var y = d.style.top * scale;
+                            return 'translate(' + x + ', ' + y + ')'
+                        })
                         .append("circle")
                         .attr('fill', "red")
 
@@ -60,26 +50,19 @@ angular
                         .attr('r',function(d) {
                             return d.visits * 5
                         })
-                        .transition().delay(function(d, i) { 
-                            console.log("d.date-startTime:",d.date-startTime);
-                            return d.date-startTime; 
-                        })  
+                        .transition().delay(1000)  
                         .attr('r',function(d) {
                             return d.visits * 20
                         })
-                        .style('opacity', 0)
-                        .ease(Math.sqrt)
+                        .exit().remove();
                       
-                        
-                        .duration(2500)
-                        .remove();
 
-                  /*  var circle_container = circle_group.append('a')
+                    /*  var circle_container = circle_group.append('a')
                         .attr('xlink:href', data.url)
                         .attr('target', '_blank')
                         .attr('fill', svg_text_color);*/
 
-                  /*  var circle = circle_container.append('circle')
+                    /*  var circle = circle_container.append('circle')
                         .classed(type, true)
                         .attr('r', size)
                         .transition()
@@ -92,10 +75,13 @@ angular
                     };
 
                     //Watch 'data' and run scope.render(newVal) whenever it changes
-                    //Use true for 'objectEquality' property so comparisons are done on equality and not reference
-                    scope.$watch('data', function() {
+                    //Use true for 'objectEquality' property so comparisons are done on equality and not reference but this would be expensive...
+                    //better solution is using $watchCollection() which make comparison on equality only when needed so... should be less expensive and more efficient that wacth with true as parameter
+                    scope.$watchCollection('data', function(newVal, oldVal) {
                         scope.render(scope.data);
-                    }, true);
+                    });
+
+
                 }
             };
         }])
@@ -124,6 +110,7 @@ angular
                         $scope.hitIds.push(id)
                         $scope.hits.push(hit);
 
+                        
                        
                         $scope.now = hit;
                       
@@ -151,8 +138,8 @@ angular
             this.date = new Date();
             this.city = data.city;
             this.style = {
-                top: Math.floor(Math.random() * 100) + 1 + '%',
-                left: Math.floor(Math.random() * 100) + 1 + '%'
+                top: Math.floor(Math.random() * 100) + 1 ,
+                left: Math.floor(Math.random() * 100) + 1 
             }
 
 
