@@ -48,12 +48,18 @@ angular
 
                     
                         .attr('r',function(d) {
-                            return d.visits * 5
-                        })
-                        .transition().delay(1000)  
+                            return d.visits * 1
+                        })            
+                        .style('opacity', 0)
+                        .transition().duration(2000)  
                         .attr('r',function(d) {
-                            return d.visits * 20
-                        })
+                            return d.visits * 10
+                        }) 
+                        .style('opacity', 1)
+                      
+                      
+                        
+                       
                         .exit().remove();
                       
 
