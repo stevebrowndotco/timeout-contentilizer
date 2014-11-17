@@ -51,11 +51,11 @@ angular
                             return d.visits * 1
                         })            
                         .style('opacity', 0)
-                        .transition().duration(2000)  
+                        .transition().duration(4000)  
                         .attr('r',function(d) {
                             return d.visits * 10
                         }) 
-                        .style('opacity', 1)
+                        .style('opacity', 0.5)
                       
                       
                         
@@ -114,6 +114,7 @@ angular
 
                         var hit = new VisitModel(data.body);
                         $scope.hitIds.push(id)
+                        $scope.hits=[];
                         $scope.hits.push(hit);
 
                         
